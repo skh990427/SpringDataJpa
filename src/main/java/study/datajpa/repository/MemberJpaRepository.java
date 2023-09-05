@@ -6,6 +6,8 @@ import study.datajpa.entity.Member;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberJpaRepository {
@@ -16,6 +18,27 @@ public class MemberJpaRepository {
     public Member save(Member member) {
         em.persist(member);
         return member;
+    }
+
+    public void delete(Member member) {
+        em.remove(member);
+    }
+
+    public List<Member> findAll() {
+        //JPQL - 객체를 대상으로 하는 쿼리
+        List<Member> result = em.createQuery("select m from Member m", Member.class).getResultList();
+
+        return result;
+    }
+
+    public Optional<Member> findById(Long id) {
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
+    } //멤버가 널일수도 있고 아닐수도 있어서 옵셔널로 감싸서 전달
+
+    public long count() {
+        return em.createQuery("select count(m) from Member m", Long.class)
+                .getSingleResult();
     }
 
     public Member find(Long id) {
