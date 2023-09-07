@@ -9,6 +9,10 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "username", "age"}) //연관관계는 무한루프때문에 @ToString 안하는게 좋다
+@NamedQuery( //실무에서 거의 사용되지않음
+        name="Member.findByUsername",
+        query="select m from Member m where m.username = :username"
+)
 public class Member {
     @Id
     @GeneratedValue

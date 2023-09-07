@@ -85,4 +85,16 @@ class MemberRepositoryTest {
     public void findHelloBy() { //()에 컨디션을 안넣으면 그냥 전체조회
         List<Member> helloBy = memberRepository.findTop3HelloBy();
     }
+
+    @Test
+    public void testNamedQuery() throws Exception {
+        Member m2 = new Member("AAA", 20);
+        Member m1 = new Member("AAA", 10);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> result = memberRepository.findByUsername("AAA");
+        Member findMember = result.get(0);
+        assertThat(findMember).isEqualTo(m1);
+    }
 }
