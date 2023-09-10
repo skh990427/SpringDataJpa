@@ -10,6 +10,7 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +23,6 @@ class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
     @Autowired TeamRepository teamRepository;
-
 
     @Test
     public void testMember() throws Exception {
@@ -116,6 +116,19 @@ class MemberRepositoryTest {
 
     @Test
     public void findUserNameList() throws Exception {
+        Member m2 = new Member("AAA", 20);
+        Member m1 = new Member("AAA", 10);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<String> userNameList = memberRepository.findUserNameList();
+        for (String s : userNameList) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void findMemberDto() throws Exception {
         Team team = new Team("TeamA");
         teamRepository.save(team);
 
@@ -129,5 +142,30 @@ class MemberRepositoryTest {
         }
     }
 
+    @Test
+    public void findUsernameList() throws Exception {
+        Member m2 = new Member("AAA", 20);
+        Member m1 = new Member("BBB", 10);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
 
+        List<String> userNameList = memberRepository.findUserNameList();
+        for (String s : userNameList) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void findByNames() throws Exception {
+        Member m2 = new Member("AAA", 20);
+        Member m1 = new Member("BBB", 10);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
+
+        for (Member member : result) {
+            System.out.println("member = " + member);
+        }
+    }
 }
