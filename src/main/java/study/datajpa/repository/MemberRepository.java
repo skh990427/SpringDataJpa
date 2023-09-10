@@ -16,4 +16,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query(name = "Member.findByUsername") //사실 얘는 주석처리해도 돌아감
     //레포지토리에 바로 쿼리를 칠수있는 기능이있는데 그 기능이 너무 강해서 네임드쿼리는 실무에서 잘 쓰지않음
     List<Member> findByUsername(@Param("username") String username);
+
+    //실무에서 자주 사용됨
+    @Query("select m from Member m where m.username = :username and m.age = :age")
+    List<Member> findUser(@Param("username") String username, @Param("age") int age);
+
 }
