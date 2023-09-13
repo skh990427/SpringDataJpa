@@ -2,6 +2,7 @@ package study.datajpa.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -49,4 +50,22 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying(clearAutomatically = true) //무언가 값을 변경할때는 이 어노테이션을 꼭 넣어야함. 안넣으면 리스트나 singleResult 가져옴
     @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
     int bulkAgePlus(@Param("age") int age);
+
+    //패치조인 = 연관된걸 셀렉트쿼리 한방에 다 긁어온다
+    //스프링데이터JPA는 맨날 findBy뭐 해서 쓰는데 이러면 JPQL을 써야하잖아요
+    //그래서 우리는 엔티티그래프(객체 그래프) 라는게 있다!
+    @Query("select m from Member m left join fetch m.team")
+    List<Member> findMemberFetchJoin();
+
+    @Override
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findAll();
+
+    //JPQL을 사용해서 엔티티 그래프를 사용할 수도있음 위에꺼랑 똑같음 그냥
+    @EntityGraph(attributePaths = {"team"})
+    @Query("select m from Member m")
+    List<Member> findMemberEntityGraph();
+
+    @EntityGraph(attributePaths = {"team"})
+    List<Member> findEntityGraphByUsername(@Param("username") String username);
 }
